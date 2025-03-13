@@ -16,7 +16,6 @@ import { NotificationFollowRequest } from './notification_follow_request';
 import { NotificationMention } from './notification_mention';
 import { NotificationModerationWarning } from './notification_moderation_warning';
 import { NotificationPoll } from './notification_poll';
-import { NotificationReaction } from './notification_reaction';
 import { NotificationReblog } from './notification_reblog';
 import { NotificationSeveredRelationships } from './notification_severed_relationships';
 import { NotificationStatus } from './notification_status';
@@ -75,14 +74,6 @@ export const NotificationGroup: React.FC<{
     case 'favourite':
       content = (
         <NotificationFavourite
-          unread={unread}
-          notification={notificationGroup}
-        />
-      );
-      break;
-    case 'reaction':
-      content = (
-        <NotificationReaction
           unread={unread}
           notification={notificationGroup}
         />
