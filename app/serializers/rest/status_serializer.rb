@@ -30,12 +30,17 @@ class REST::StatusSerializer < ActiveModel::Serializer
   has_many :ordered_mentions, key: :mentions
   has_many :tags
   has_many :emojis, serializer: REST::CustomEmojiSerializer
+  has_many :reactions, serializer: REST::ReactionSerializer
 
   has_one :quote, key: :quote, serializer: REST::QuoteSerializer
   has_one :preview_card, key: :card, serializer: REST::PreviewCardSerializer
   has_one :preloadable_poll, key: :poll, serializer: REST::PollSerializer
 
   delegate :local?, to: :object
+
+  def quote
+    object.quote if object.quote&.acceptable?
+  end
 
   def id
     object.id.to_s
@@ -157,6 +162,10 @@ class REST::StatusSerializer < ActiveModel::Serializer
 
   def ordered_mentions
     object.active_mentions.to_a.sort_by(&:id)
+  end
+
+  def reactions
+    object.reactions(current_user&.account&.id)
   end
 
   private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_20_204643) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_05_110215) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -906,6 +906,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_204643) do
     t.string "activity_uri"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "legacy", default: false, null: false
     t.index ["account_id", "quoted_account_id"], name: "index_quotes_on_account_id_and_quoted_account_id"
     t.index ["activity_uri"], name: "index_quotes_on_activity_uri", unique: true, where: "(activity_uri IS NOT NULL)"
     t.index ["approval_uri"], name: "index_quotes_on_approval_uri", where: "(approval_uri IS NOT NULL)"
@@ -1073,6 +1074,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_204643) do
     t.datetime "updated_at", precision: nil, null: false
     t.index ["account_id", "status_id"], name: "index_status_pins_on_account_id_and_status_id", unique: true
     t.index ["status_id"], name: "index_status_pins_on_status_id"
+  end
+
+  create_table "status_reactions", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "status_id", null: false
+    t.string "name", default: "", null: false
+    t.bigint "custom_emoji_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["account_id", "status_id", "name"], name: "index_status_reactions_on_account_id_and_status_id", unique: true
+    t.index ["custom_emoji_id"], name: "index_status_reactions_on_custom_emoji_id"
+    t.index ["status_id"], name: "index_status_reactions_on_status_id"
   end
 
   create_table "status_stats", force: :cascade do |t|
@@ -1430,6 +1443,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_204643) do
   add_foreign_key "status_edits", "statuses", on_delete: :cascade
   add_foreign_key "status_pins", "accounts", name: "fk_d4cb435b62", on_delete: :cascade
   add_foreign_key "status_pins", "statuses", on_delete: :cascade
+  add_foreign_key "status_reactions", "accounts", on_delete: :cascade
+  add_foreign_key "status_reactions", "custom_emojis", on_delete: :cascade
+  add_foreign_key "status_reactions", "statuses", on_delete: :cascade
   add_foreign_key "status_stats", "statuses", on_delete: :cascade
   add_foreign_key "status_trends", "accounts", on_delete: :cascade
   add_foreign_key "status_trends", "statuses", on_delete: :cascade

@@ -1565,6 +1565,7 @@ body > [data-popper-placement] {
 
     .status__content,
     .status__action-bar,
+    .reactions-bar,
     .media-gallery,
     .video-player,
     .audio-player,
@@ -1802,6 +1803,14 @@ body > [data-popper-placement] {
 
   &-spacer {
     flex-grow: 1;
+  }
+
+  & > .emoji-picker-dropdown {
+    height: 24px;
+
+    > .emoji-button {
+      padding: 0;
+    }
   }
 }
 
@@ -4863,6 +4872,10 @@ a.status-card {
   text-align: center;
 }
 
+.detailed-status__button .emoji-button {
+  padding: 0;
+}
+
 .column-settings {
   display: flex;
   flex-direction: column;
@@ -7355,18 +7368,19 @@ img.modal-warning {
 }
 
 .audio-player {
-  overflow: hidden;
   box-sizing: border-box;
+  container: audio-player / inline-size;
   position: relative;
-  background: var(--player-background-color, var(--background-color));
-  color: var(--player-foreground-color);
-  border-radius: 8px;
-  padding-bottom: 44px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  aspect-ratio: 16 / 9;
+  color: var(--player-foreground-color);
+  background: var(--player-background-color, var(--background-color));
+  border-radius: 8px;
   outline: 1px solid var(--media-outline-color);
   outline-offset: -1px;
-  aspect-ratio: 16 / 9;
-  container: audio-player / inline-size;
 
   &__controls {
     display: grid;
@@ -7415,7 +7429,15 @@ img.modal-warning {
   }
 
   &__visualizer {
+    width: 100%;
     max-width: 200px;
+  }
+
+  .video-player__seek {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 24px;
+    z-index: 1; /* Ensure this renders on top of audio player controls */
   }
 
   &.inactive {
@@ -8497,6 +8519,20 @@ noscript {
     font-weight: 400;
     margin-bottom: 10px;
 
+    &__loading-indicator-wrapper {
+      position: relative;
+      height: 37px;
+
+      .loading-indicator {
+        left: 10px;
+      }
+
+      .circular-progress {
+        width: 14px;
+        height: 14px;
+      }
+    }
+
     label {
       display: block;
       font-size: 12px;
@@ -8955,6 +8991,8 @@ noscript {
   }
 
   &--empty {
+    margin-top: 0;
+
     .emoji-button {
       padding: 0;
     }
@@ -10789,6 +10827,10 @@ noscript {
     color: $gold-star;
   }
 
+  &--reaction &__icon {
+    color: $blurple-300;
+  }
+
   &--reblog &__icon {
     color: $valid-value-color;
   }
@@ -11000,6 +11042,7 @@ noscript {
 
   .status__content,
   .status__action-bar,
+  .reactions-bar,
   .media-gallery,
   .video-player,
   .audio-player,
@@ -11373,6 +11416,8 @@ noscript {
   &__slide {
     flex: 0 0 auto;
     flex-basis: 100%;
+    width: 100%;
+    overflow: hidden;
   }
 
   .status {
